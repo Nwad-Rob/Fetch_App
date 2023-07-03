@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">My Application</string>
+    <string name="constraintlayout_in_scrollview">ConstraintLayout in ScrollView</string>
+    <string name="filter">FILTER</string>
 </resources>

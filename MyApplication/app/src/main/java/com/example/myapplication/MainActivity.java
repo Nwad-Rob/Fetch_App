@@ -7,6 +7,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 
+import com.example.myapplication.Classes.Connection;
 import com.example.myapplication.Classes.Item;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -18,35 +19,33 @@ import android.widget.TextView;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
     Button buttonE;
-    Button buttonA;
+
     TextView txt;
 
     Item item = new Item();
+    Connection conn = new Connection();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         buttonE = (Button) findViewById(R.id.btn1);
-        buttonA = (Button) findViewById(R.id.btn2);
         txt = (TextView) findViewById(R.id.txt1);
         buttonE.setOnClickListener(this);
-        buttonA.setOnClickListener(this);
+
     }
 
 
 
     @Override
     public void onClick(View view) {
-        if (view.getId() == R.id.btn2){
-            txt.setText("Hello World");
-        }
-        // Obtain the JSON url
+
+        // Obtain the JSON url. Planning on adding a second button
         if (view.getId() == R.id.btn1) {
             String url = "https://fetch-hiring.s3.amazonaws.com/hiring.json";
             try {
-                String jsonData = getHTML(url);
+                String jsonData = conn.getHTML(url);
                 List<Item> items = parseJSON(jsonData);
-                displayItems(items);
+                txt.setText(displayItems(items));
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -58,19 +57,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     //Creating connection, obtain the Json Object and transform it into a string
-    public static String getHTML(String urlToRead) throws IOException {
-        StringBuilder result = new StringBuilder();
-        URL url = new URL(urlToRead);
-        HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-        conn.setRequestMethod("GET");
-        try (BufferedReader reader = new BufferedReader(
-                new InputStreamReader(conn.getInputStream()))) {
-            for (String line; (line = reader.readLine()) != null; ) {
-                result.append(line);
-            }
-        }
-        return result.toString();
-    }
+
 
     //parsing through a Json Object
     private static List<Item> parseJSON(String jsonData) {
@@ -78,16 +65,20 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         return gson.fromJson(jsonData, new TypeToken<List<Item>>() {}.getType());
     }
 
-    private static void displayItems(List<Item> items) {
+    private static String displayItems(List<Item> items) {
+        StringBuilder output = new StringBuilder();
         Map<Integer, List<Item>> itemsByListId = items.stream()
                 .filter(item -> item.getName() != null && !item.getName().isEmpty())
                 .collect(Collectors.groupingBy(Item::getListId));
 
         itemsByListId.forEach((listId, itemList) -> {
             itemList.sort(Comparator.comparing(Item::getName));
-            System.out.println("List ID: " + listId);
-            itemList.forEach(item -> System.out.println("  Item Name: " + item.getName()));
-            System.out.println();
+            output.append("List ID: ").append(listId).append("\n");
+            itemList.forEach(item -> output.append("  Item Name: ").append(item.getName()).append("\n"));
+            output.append("\n");
         });
+
+        return output.toString();
     }
+
 }
