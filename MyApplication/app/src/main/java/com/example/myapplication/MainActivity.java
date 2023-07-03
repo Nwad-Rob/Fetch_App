@@ -18,6 +18,7 @@ import android.widget.TextView;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
     Button buttonE;
+    Button buttonA;
     TextView txt;
 
     Item item = new Item();
@@ -26,24 +27,34 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         buttonE = (Button) findViewById(R.id.btn1);
+        buttonA = (Button) findViewById(R.id.btn2);
         txt = (TextView) findViewById(R.id.txt1);
         buttonE.setOnClickListener(this);
+        buttonA.setOnClickListener(this);
     }
+
+
 
     @Override
     public void onClick(View view) {
-        // Obtain the JSON url
-        String url = "https://fetch-hiring.s3.amazonaws.com/hiring.json";
-        try {
-            String jsonData = getHTML(url);
-            List<Item> items = parseJSON(jsonData);
-            displayItems(items);
-        } catch (IOException e) {
-            e.printStackTrace();
+        if (view.getId() == R.id.btn2){
+            txt.setText("Hello World");
         }
-        //System.out.println(getHTML(url));
+        // Obtain the JSON url
+        if (view.getId() == R.id.btn1) {
+            String url = "https://fetch-hiring.s3.amazonaws.com/hiring.json";
+            try {
+                String jsonData = getHTML(url);
+                List<Item> items = parseJSON(jsonData);
+                displayItems(items);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            //System.out.println(getHTML(url));
 
-        System.out.println(parseJSON(url));
+            //System.out.println(parseJSON(url));
+        }
+
     }
 
     //Creating connection, obtain the Json Object and transform it into a string
