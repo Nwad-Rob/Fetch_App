@@ -1,5 +1,4 @@
 package com.example.myapplication.Classes;
-import android.os.AsyncTask;
 import android.util.Log;
 
 import java.io.*;
@@ -8,11 +7,12 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 
-import com.example.myapplication.Classes.Item;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-public class Connection  {
-    String result;
+public class VSC_Code {
+
+
+    // Creating a connection to the url Link and returning it as a String
     public static String getHTML(String urlToRead) throws IOException {
         StringBuilder result = new StringBuilder();
         URL url = new URL(urlToRead);
@@ -27,11 +27,14 @@ public class Connection  {
         conn.disconnect();
         return result.toString();
     }
+
+    // parsing through the Json Object using Gson ( google Library)
     public static List<Item> parseJSON(String jsonData) {
         Gson gson = new Gson();
         return gson.fromJson(jsonData, new TypeToken<List<Item>>() {}.getType());
     }
 
+    // Filtering the Item using streams to filter and group
     public  static String displayItems(List<Item> items) {
         StringBuilder output = new StringBuilder();
         Map<Integer, List<Item>> itemsByListId = items.stream()
@@ -48,19 +51,4 @@ public class Connection  {
         return output.toString();
     }
 
-    public void execute (){
-        String url = "https://fetch-hiring.s3.amazonaws.com/hiring.json";
-        try {
-            String jsonData = getHTML(url);
-            Log.d("backend",  jsonData);
-            List<Item> items = parseJSON(jsonData);
-            this.result = displayItems(items);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    public String getResult(){
-        return this.result;
-    }
 }

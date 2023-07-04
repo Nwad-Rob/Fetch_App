@@ -1,6 +1,7 @@
 package com.example.myapplication;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -29,6 +30,7 @@ public class test_main extends AppCompatActivity {
     private String outputStr;
 
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -42,6 +44,7 @@ public class test_main extends AppCompatActivity {
         Request request = new Request.Builder()
                 .url(url)
                 .build();
+        //Log.d("Creation", "onCreate: ");
 
         client.newCall(request).enqueue(new Callback() {
             @Override
@@ -53,12 +56,16 @@ public class test_main extends AppCompatActivity {
             public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
                 if (response.isSuccessful()){
                      myResponse = response.body().string();
+                   // Log.d("JSON-File", "onResponse: ");
+
                     StringBuilder output = new StringBuilder();
                     Gson gson = new Gson();
                     List<Item> items = gson.fromJson(myResponse, new TypeToken<List<Item>>() {}.getType());
                     Map<Integer, List<Item>> itemsByListId = items.stream()
                             .filter(item -> item.getName() != null && !item.getName().isEmpty())
                             .collect(Collectors.groupingBy(Item::getListId));
+
+                    // Log.d("JSON-File", "onResponse: ");
 
                     itemsByListId.forEach((listId, itemList) -> {
                         itemList.sort(Comparator.comparing(Item::getName));
@@ -73,6 +80,7 @@ public class test_main extends AppCompatActivity {
                         @Override
                         public void run() {
                             mTextViewResult.setText(outputStr);
+                           // Log.d("Execute", "run: ");
                         }
                     });
                 }

@@ -1,6 +1,8 @@
 package com.example.myapplication.Classes;
 
+// An item class that displays elements in the Json Object. Create getters and setters
 public class Item {
+
     private int id;
     private int listId;
     private String name;
