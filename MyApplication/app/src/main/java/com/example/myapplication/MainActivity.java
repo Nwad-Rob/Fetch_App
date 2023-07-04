@@ -13,6 +13,7 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -32,28 +33,18 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         txt = (TextView) findViewById(R.id.txt1);
         buttonE.setOnClickListener(this);
 
+
     }
 
 
 
     @Override
     public void onClick(View view) {
-
+        Log.d("debug", "OnClick");
         // Obtain the JSON url. Planning on adding a second button
         if (view.getId() == R.id.btn1) {
-            String url = "https://fetch-hiring.s3.amazonaws.com/hiring.json";
-            try {
-                String jsonData = conn.getHTML(url);
-                List<Item> items = parseJSON(jsonData);
-                txt.setText(displayItems(items));
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            //System.out.println(getHTML(url));
-
-            //System.out.println(parseJSON(url));
+          conn.execute();
         }
-
     }
 
     //Creating connection, obtain the Json Object and transform it into a string
