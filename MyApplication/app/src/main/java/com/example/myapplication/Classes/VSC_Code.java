@@ -1,18 +1,24 @@
 package com.example.myapplication.Classes;
-import android.util.Log;
-
-import java.io.*;
-import java.net.*;
-import java.util.*;
-import java.util.stream.Collectors;
-
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 public class VSC_Code {
 
 
-    // Creating a connection to the url Link and returning it as a String
+    /* Parameter: String
+      return : String
+      Purpose: Attempting connection to the JSON Object
+    */
     public static String getHTML(String urlToRead) throws IOException {
         StringBuilder result = new StringBuilder();
         URL url = new URL(urlToRead);
@@ -28,13 +34,20 @@ public class VSC_Code {
         return result.toString();
     }
 
-    // parsing through the Json Object using Gson ( google Library)
+    /* Parameter: String
+       return : List<Item>
+       Purpose: Parsing through the JSON object
+       Info : TypeToken aids Gson to deserialize a generic class
+     */
     public static List<Item> parseJSON(String jsonData) {
         Gson gson = new Gson();
         return gson.fromJson(jsonData, new TypeToken<List<Item>>() {}.getType());
     }
 
-    // Filtering the Item using streams to filter and group
+    /* Parameter: List<Item>
+       return : String
+       Purpose: Sort, group and filter
+     */
     public  static String displayItems(List<Item> items) {
         StringBuilder output = new StringBuilder();
         Map<Integer, List<Item>> itemsByListId = items.stream()
@@ -50,5 +63,7 @@ public class VSC_Code {
 
         return output.toString();
     }
+
+
 
 }

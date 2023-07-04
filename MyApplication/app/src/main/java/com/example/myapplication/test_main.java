@@ -1,7 +1,6 @@
 package com.example.myapplication;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -19,7 +18,6 @@ import java.util.stream.Collectors;
 
 import okhttp3.Call;
 import okhttp3.Callback;
-import okhttp3.Connection;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
@@ -38,14 +36,20 @@ public class test_main extends AppCompatActivity {
 
         mTextViewResult = findViewById(R.id.txt_test);
 
+         /* Utilizing OkHTTPClient to initiate network connection
+       TO DO : Set permissions in the manifest.xml
+       TO DO : import up-to-date dependencies
+     */
+
         OkHttpClient client = new OkHttpClient();
         String url = "https://fetch-hiring.s3.amazonaws.com/hiring.json";
 
         Request request = new Request.Builder()
                 .url(url)
                 .build();
-        //Log.d("Creation", "onCreate: ");
+        //*debug* Log.d("Creation", "onCreate: ");
 
+        // .enqueue method creates a new thread that runs in the back end and not directly
         client.newCall(request).enqueue(new Callback() {
             @Override
             public void onFailure(@NonNull Call call, @NonNull IOException e) {
@@ -65,7 +69,7 @@ public class test_main extends AppCompatActivity {
                             .filter(item -> item.getName() != null && !item.getName().isEmpty())
                             .collect(Collectors.groupingBy(Item::getListId));
 
-                    // Log.d("JSON-File", "onResponse: ");
+                    //*debug* Log.d("JSON-File", "onResponse: ");
 
                     itemsByListId.forEach((listId, itemList) -> {
                         itemList.sort(Comparator.comparing(Item::getName));
@@ -74,13 +78,13 @@ public class test_main extends AppCompatActivity {
                         output.append("\n");
                     });
                     outputStr = output.toString();
-                    //ans
+
 
                     test_main.this.runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
                             mTextViewResult.setText(outputStr);
-                           // Log.d("Execute", "run: ");
+                           // *debug* Log.d("Execute", "run: ");
                         }
                     });
                 }
